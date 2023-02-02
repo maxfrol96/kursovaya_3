@@ -75,6 +75,6 @@ for trans in transactions_list:
                                             trans['operationAmount']['currency']['name']))
     if len(last_5_trans) == 5:
         for trans in last_5_trans:
-            print(trans.info())
+            print(trans.info()) #вывод транзакций
         break
 
