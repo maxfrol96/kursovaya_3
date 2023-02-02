@@ -73,7 +73,7 @@ for trans in transactions_list:
             last_5_trans.append(transaction(trans['date'], trans['description'], 'Данные об отправителе отсутствуют',
                                             trans['to'], trans['operationAmount']['amount'],
                                             trans['operationAmount']['currency']['name']))
-    if len(last_5_trans) == 30:
+    if len(last_5_trans) == 5:
         for trans in last_5_trans:
             print(trans.info())
         break
