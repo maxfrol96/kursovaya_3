@@ -1,5 +1,5 @@
-import requests
-import datetime
+import requests 
+import datetime #импорт библиотек
 
 URL = 'https://www.jsonkeeper.com/b/45XD'
 
