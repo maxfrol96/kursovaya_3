@@ -1,9 +1,10 @@
 import requests 
 import datetime #импорт библиотек
 
+
 URL = 'https://www.jsonkeeper.com/b/45XD'
 
-class transaction:
+class Transaction:
     def __init__(self, trans_date, trans_desc, trans_from, trans_to, trans_amount, trans_curr):
         self.trans_date = trans_date
         self.trans_desc = trans_desc
@@ -49,11 +50,11 @@ class transaction:
 
     def get_date(self):
         trans_date = datetime.datetime.strptime(self.trans_date, '%Y-%m-%dT%H:%M:%S.%f')
-        return trans_date.date()
+        return str(trans_date.date())
 
     def info(self):
-        return f'{transaction.get_date(self)} {self.trans_desc}\n' \
-               f'{transaction.blur_from(self)} -> {transaction.blur_to(self)}\n' \
+        return f'{Transaction.get_date(self)} {self.trans_desc}\n' \
+               f'{Transaction.blur_from(self)} -> {Transaction.blur_to(self)}\n' \
                f'{self.trans_amount} {self.trans_curr}\n'
 
 transactions_list = sorted(
@@ -61,20 +62,22 @@ transactions_list = sorted(
     key=lambda x: datetime.datetime.strptime(x['date'], '%Y-%m-%dT%H:%M:%S.%f'), reverse=True
 )
 
-last_5_trans = []
+last_5_trans_list = []
 
-for trans in transactions_list:
-    if trans['state'] == 'EXECUTED':
-        if 'from' in trans:
-            last_5_trans.append(transaction(trans['date'], trans['description'], trans['from'], trans['to'],
-                                            trans['operationAmount']['amount'],
-                                            trans['operationAmount']['currency']['name']))
-        else:
-            last_5_trans.append(transaction(trans['date'], trans['description'], 'Данные об отправителе отсутствуют',
-                                            trans['to'], trans['operationAmount']['amount'],
-                                            trans['operationAmount']['currency']['name']))
-    if len(last_5_trans) == 5:
-        for trans in last_5_trans:
-            print(trans.info()) #вывод транзакций
-        break
+def get_last_5(transactions_list, last_5_trans):
+    for trans in transactions_list:
+        if trans['state'] == 'EXECUTED':
+            if 'from' in trans:
+                last_5_trans.append(Transaction(trans['date'], trans['description'], trans['from'], trans['to'],
+                                                trans['operationAmount']['amount'],
+                                                trans['operationAmount']['currency']['name']))
+            else:
+                last_5_trans.append(Transaction(trans['date'], trans['description'], 'Данные об отправителе отсутствуют',
+                                                trans['to'], trans['operationAmount']['amount'],
+                                                trans['operationAmount']['currency']['name']))
+        if len(last_5_trans) == 5:
+            for trans in last_5_trans:
+                print(trans.info()) #вывод транзакций
+            break
 
+get_last_5(transactions_list, last_5_trans_list)
